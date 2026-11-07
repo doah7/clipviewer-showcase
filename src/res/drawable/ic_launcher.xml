@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android 7.x용: 둥근 사각형 배경 위에 재생 버튼 -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:left="6dp" android:top="6dp" android:right="6dp" android:bottom="6dp">
+        <shape>
+            <corners android:radius="22dp" />
+            <gradient
+                android:angle="270"
+                android:startColor="#FF33363B"
+                android:endColor="#FF1E2024" />
+        </shape>
+    </item>
+    <item android:drawable="@drawable/ic_launcher_play" />
+</layer-list>
