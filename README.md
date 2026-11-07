@@ -1,61 +1,87 @@
-# ClipViewer
+<p align="center">
+  <img src="assets/banner.svg" alt="ClipViewer — 태블릿용 개인 영화 감상 앱" width="100%">
+</p>
 
-태블릿용 개인 영화 감상 앱 (Android, Java)
+<p align="center">
+  <img src="https://img.shields.io/badge/Android-7.0%2B-2FE08A?style=flat-square&logo=android&logoColor=white" alt="Android 7.0+">
+  <img src="https://img.shields.io/badge/Java-17-FF4D5E?style=flat-square&logo=openjdk&logoColor=white" alt="Java 17">
+  <img src="https://img.shields.io/badge/TMDB-API-8A93A6?style=flat-square&logo=themoviedatabase&logoColor=white" alt="TMDB API">
+  <img src="https://img.shields.io/badge/외부_라이브러리-없음-3A3D44?style=flat-square" alt="외부 라이브러리 없음">
+</p>
+
+<p align="center">
+  <b>🎬 <a href="https://doah7.github.io/clipviewer-showcase/">소개 페이지에서 크게 보기</a></b>
+</p>
 
 웹에 올라온 영화 영상을 인터페이스 없이 전체화면으로 보고, 영화 정보·별점·시청 기록으로 개인 영화 목록을 관리하는 앱입니다.
 혼자 쓰려고 만든 개인 프로젝트이며, 이 저장소는 **구조와 일부 코드를 보여주기 위한 공개본**입니다.
 
+> [!NOTE]
 > 이 저장소에는 전체 코드 중 일부만 들어 있습니다. 특정 웹사이트와 연동되는 부분(페이지 구조를 읽는 스크립트 등)은 제외했고, 그대로 빌드되지 않습니다.
 
-## 화면
+## 🖼 화면
 
-**포스터 보기**
-![포스터 보기](screenshots/grid.jpg)
+<p align="center">
+  <img src="screenshots/grid.jpg" alt="포스터 보기" width="100%"><br>
+  <sub><b>포스터 보기</b> — 시청 상태 라벨, 별점, 감독 · 연도</sub>
+</p>
 
-**검색 패널 — 감독 필터 + 연도순 정렬**
-![검색 패널](screenshots/list1.jpg)
+<table>
+  <tr>
+    <td width="50%"><img src="screenshots/list1.jpg" alt="검색 패널 — 감독 필터"><br><sub><b>검색 패널</b> — 감독 필터 + 연도순 정렬</sub></td>
+    <td width="50%"><img src="screenshots/list2.jpg" alt="검색 패널 — 시청 상태"><br><sub><b>검색 패널</b> — 시청 상태 필터</sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="screenshots/director1.jpg" alt="감독 탭"><br><sub><b>감독 탭</b> — 클립에 나온 감독 모음</sub></td>
+    <td width="50%"><img src="screenshots/director2.jpg" alt="감독 페이지"><br><sub><b>감독 페이지</b> — 필모그래피와 내 클립</sub></td>
+  </tr>
+</table>
 
-**검색 패널 — 시청 상태 필터**
-![시청 상태 필터](screenshots/list2.jpg)
+<p align="center">
+  ▶ <a href="screenshots/use.mp4"><b>사용 영상 보기</b></a> &nbsp;·&nbsp; 소개 페이지에서는 바로 재생됩니다
+</p>
 
-**감독 탭**
-![감독 탭](screenshots/director1.jpg)
+<sub>포스터와 인물 사진은 TMDB에서 제공받은 이미지이며, 각 저작권자에게 권리가 있습니다.</sub>
 
-**감독 페이지 — 필모그래피와 내 클립**
-![감독 페이지](screenshots/director2.jpg)
+## ✨ 주요 기능
 
-**사용 영상**
-[▶ 사용 영상 보기 (use.mp4)](screenshots/use.mp4)
+<details open>
+<summary><b>🎞 감상</b></summary>
 
-*포스터와 인물 사진은 TMDB에서 제공받은 이미지이며, 각 저작권자에게 권리가 있습니다.*
-
-## 주요 기능
-
-**감상**
 - 웹 페이지 안의 영상 요소만 화면 전체에 띄우고 나머지 UI는 모두 숨기는 전체화면 뷰어
 - 직접 만든 조작부: 진행 바, 10초 이동(버튼·더블탭), 재생 속도, 음량
 - 이어보기: 마지막 위치를 저장해 다시 열면 그 위치부터 재생
 - 외부 앱에서만 재생되는 영상은 해당 앱으로 넘김
+</details>
 
-**목록 관리**
+<details open>
+<summary><b>📋 목록 관리</b></summary>
+
 - 시청 상태(시청 전 / 시청 중 / 시청 완료): 시청 기록으로 자동 판단, 직접 바꾸면 그 값이 우선
 - 0.1 단위 별점 (별 5개를 끌어서 조절하는 커스텀 뷰)
 - 포스터 보기 / 목록 보기 전환, 썸네일 진행률 막대
 - 공유 메뉴로 추가, 짧은 링크 자동 풀기
 - 백업 / 복원 (JSON 파일)
+</details>
 
-**영화 정보 (TMDB)**
+<details open>
+<summary><b>🎬 영화 정보 (TMDB)</b></summary>
+
 - 제목·원제·연도·감독으로 검색해 후보가 하나면 바로, 여러 개면 골라서 정보를 붙임
 - 장르, 상영시간, 국가, 출연, 평점, 줄거리, 포스터
 - 감독 이름 규칙: 한국인 감독은 한글 이름, 나머지는 영어(원어) 이름
 - 감독 탭과 감독 페이지: 필모그래피에서 내가 가진 영화를 표시하고, 없는 영화는 바로 목록에 추가
+</details>
 
-**검색 패널**
+<details open>
+<summary><b>🔍 검색 패널</b></summary>
+
 - 검색어, 정렬(추가순·내 별점·TMDB 평점·연도·제목·최근 시청, 오름/내림)
 - 태그 필터: 시청 상태, 감독(2편 이상 상위 10명), 장르, 연대, 국가
 - 같은 줄 안에서는 "또는", 줄끼리는 "그리고"로 걸러지며, 상태는 앱을 껐다 켜도 유지
+</details>
 
-## 코드 구성 (공개본)
+## 🧩 코드 구성 (공개본)
 
 | 파일 | 내용 |
 |---|---|
@@ -73,7 +99,7 @@
 
 외부 라이브러리 없이 Android 기본 API만으로 만들었습니다.
 
-## 사용 및 라이선스
+## 📄 사용 및 라이선스
 
 개인 프로젝트로, **코드의 사용·복제·수정·배포를 허용하지 않습니다** (All rights reserved). 보기용으로만 공개합니다.
 

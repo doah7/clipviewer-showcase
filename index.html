@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ClipViewer — 태블릿용 개인 영화 감상 앱</title>
+<meta name="description" content="웹의 영화 영상을 전체화면으로 보고, 영화 정보·별점·시청 기록으로 개인 영화 목록을 관리하는 안드로이드 태블릿 앱">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root {
+    --bg: #111214;
+    --bg-2: #181a1e;
+    --card: #1f2126;
+    --line: #2c2f35;
+    --text: #f2f3f5;
+    --muted: #9aa0aa;
+    --dim: #6b717c;
+    --red: #ff4d5e;
+    --green: #2fe08a;
+    --grad: linear-gradient(135deg, var(--red), var(--green));
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", "Segoe UI", sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---- 상단 ---- */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding: 96px 0 72px;
+    border-bottom: 1px solid var(--line);
+  }
+  .hero::before, .hero::after {
+    content: "";
+    position: absolute;
+    width: 560px; height: 560px;
+    border-radius: 50%;
+    filter: blur(40px);
+    pointer-events: none;
+  }
+  .hero::before { left: -180px; top: -260px; background: radial-gradient(circle, rgba(255,77,94,.25), transparent 65%); }
+  .hero::after { right: -200px; bottom: -320px; background: radial-gradient(circle, rgba(47,224,138,.2), transparent 65%); }
+  .hero .wrap { position: relative; display: flex; align-items: center; gap: 40px; }
+  .app-icon { width: 132px; height: 132px; flex: none; filter: drop-shadow(0 16px 40px rgba(0,0,0,.5)); }
+  .hero h1 { margin: 0; font-size: clamp(44px, 7vw, 72px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; }
+  .hero h1 span { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .tagline { margin: 14px 0 0; font-size: clamp(18px, 2.4vw, 22px); color: #c9ccd3; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+  .chip { font-size: 13px; color: var(--muted); border: 1px solid var(--line); background: rgba(255,255,255,.03); padding: 5px 12px; border-radius: 999px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 20px; border-radius: 12px; font-weight: 600; text-decoration: none; font-size: 15px;
+    border: 1px solid var(--line); background: var(--card); transition: transform .15s, border-color .15s;
+  }
+  .btn:hover { transform: translateY(-2px); border-color: #444852; }
+  .btn.primary { background: var(--grad); border: 0; color: #111; }
+
+  /* ---- 섹션 공통 ---- */
+  section { padding: 80px 0; border-bottom: 1px solid var(--line); }
+  .eyebrow { font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  h2 { margin: 8px 0 12px; font-size: clamp(28px, 4vw, 38px); letter-spacing: -0.02em; }
+  .lead { margin: 0 0 36px; color: var(--muted); max-width: 640px; }
+
+  /* ---- 영상 ---- */
+  .video-frame {
+    border-radius: 18px; overflow: hidden; border: 1px solid var(--line); background: #000;
+    box-shadow: 0 30px 80px rgba(0,0,0,.45);
+  }
+  .video-frame video { display: block; width: 100%; height: auto; }
+
+  /* ---- 스크린샷 ---- */
+  .gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .shot { margin: 0; background: var(--card); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; cursor: zoom-in; transition: transform .2s, border-color .2s; }
+  .shot:hover { transform: translateY(-3px); border-color: #444852; }
+  .shot.wide { grid-column: 1 / -1; }
+  .shot img { display: block; width: 100%; height: auto; }
+  .shot figcaption { padding: 14px 18px; font-size: 14px; color: var(--muted); }
+  .shot figcaption b { color: var(--text); font-weight: 600; margin-right: 6px; }
+
+  .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.88); display: none; align-items: center; justify-content: center; padding: 24px; z-index: 10; cursor: zoom-out; }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 100%; max-height: 100%; border-radius: 12px; }
+
+  /* ---- 기능 카드 ---- */
+  .features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .card { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 28px; overflow: hidden; }
+  .card::before { content: ""; position: absolute; left: 0; top: 0; right: 0; height: 3px; background: var(--grad); opacity: .85; }
+  .card h3 { margin: 0 0 14px; font-size: 20px; display: flex; align-items: center; gap: 10px; }
+  .card h3 .emoji { font-size: 22px; }
+  .card ul { margin: 0; padding-left: 18px; color: #c9ccd3; }
+  .card li { margin: 6px 0; }
+  .card li::marker { color: var(--green); }
+
+  /* ---- 코드 구성 ---- */
+  .code-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .code-item { background: var(--bg-2); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+  .code-item code { font-family: "JetBrains Mono", Consolas, monospace; font-size: 14px; color: var(--green); }
+  .code-item p { margin: 6px 0 0; font-size: 14px; color: var(--muted); }
+  .note { margin-top: 24px; font-size: 14px; color: var(--dim); }
+
+  footer { padding: 48px 0 64px; color: var(--dim); font-size: 13px; }
+  footer p { margin: 4px 0; }
+
+  @media (max-width: 760px) {
+    .hero { padding: 64px 0 48px; }
+    .hero .wrap { flex-direction: column; align-items: flex-start; gap: 24px; }
+    .app-icon { width: 96px; height: 96px; }
+    .gallery, .features { grid-template-columns: 1fr; }
+    .code-list { grid-template-columns: 1fr; }
+    section { padding: 56px 0; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <img class="app-icon" src="assets/icon.svg" alt="ClipViewer 앱 아이콘">
+    <div>
+      <h1>Clip<span>Viewer</span></h1>
+      <p class="tagline">태블릿에서 영화를 영화답게. 전체화면 감상과 나만의 영화 목록.</p>
+      <div class="chips">
+        <span class="chip">Android 7.0+</span>
+        <span class="chip">Java</span>
+        <span class="chip">TMDB API</span>
+        <span class="chip">외부 라이브러리 없음</span>
+        <span class="chip">개인 프로젝트</span>
+      </div>
+      <div class="actions">
+        <a class="btn primary" href="#video">▶ 사용 영상</a>
+        <a class="btn" href="https://github.com/doah7/clipviewer-showcase">GitHub 저장소</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="video">
+  <div class="wrap">
+    <div class="eyebrow">Demo</div>
+    <h2>사용 영상</h2>
+    <p class="lead">클립 목록, 검색 패널, 감독 페이지를 오가며 실제로 쓰는 모습입니다.</p>
+    <div class="video-frame">
+      <video src="screenshots/use.mp4" controls muted playsinline preload="metadata"></video>
+    </div>
+  </div>
+</section>
+
+<section id="screens">
+  <div class="wrap">
+    <div class="eyebrow">Screens</div>
+    <h2>화면</h2>
+    <p class="lead">어두운 화면 위에 포스터가 주인공이 되도록 만들었습니다. 이미지를 누르면 크게 볼 수 있습니다.</p>
+    <div class="gallery">
+      <figure class="shot wide"><img src="screenshots/grid.jpg" alt="포스터 보기" loading="lazy"><figcaption><b>포스터 보기</b>시청 상태 라벨, 별점, 감독 · 연도</figcaption></figure>
+      <figure class="shot"><img src="screenshots/list1.jpg" alt="검색 패널 감독 필터" loading="lazy"><figcaption><b>검색 패널</b>감독 필터 + 연도순 정렬</figcaption></figure>
+      <figure class="shot"><img src="screenshots/list2.jpg" alt="검색 패널 시청 상태 필터" loading="lazy"><figcaption><b>검색 패널</b>시청 상태 필터</figcaption></figure>
+      <figure class="shot"><img src="screenshots/director1.jpg" alt="감독 탭" loading="lazy"><figcaption><b>감독 탭</b>클립에 나온 감독 모음</figcaption></figure>
+      <figure class="shot"><img src="screenshots/director2.jpg" alt="감독 페이지" loading="lazy"><figcaption><b>감독 페이지</b>필모그래피와 내 클립</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <div class="eyebrow">Features</div>
+    <h2>주요 기능</h2>
+    <p class="lead">"보기 편하게"와 "정리하기 편하게", 두 가지에 집중했습니다.</p>
+    <div class="features">
+      <div class="card">
+        <h3><span class="emoji">🎞</span>감상</h3>
+        <ul>
+          <li>웹 페이지 안의 영상만 화면 전체에 띄우는 전체화면 뷰어</li>
+          <li>직접 만든 조작부: 진행 바, 10초 이동(버튼·더블탭), 재생 속도, 음량</li>
+          <li>이어보기: 마지막 위치부터 다시 재생</li>
+          <li>외부 앱에서만 재생되는 영상은 해당 앱으로 연결</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="emoji">📋</span>목록 관리</h3>
+        <ul>
+          <li>시청 상태 자동 판단, 직접 바꾸면 그 값이 우선</li>
+          <li>별 5개를 끌어서 0.1 단위로 매기는 별점</li>
+          <li>포스터 보기 / 목록 보기, 썸네일 진행률 막대</li>
+          <li>공유 메뉴로 추가, 짧은 링크 자동 풀기, 백업 / 복원</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="emoji">🎬</span>영화 정보</h3>
+        <ul>
+          <li>제목·원제·연도·감독으로 TMDB에서 찾아 자동으로 연결</li>
+          <li>장르, 상영시간, 국가, 출연, 평점, 줄거리, 포스터</li>
+          <li>한국인 감독은 한글 이름, 나머지는 원어 이름으로 통일</li>
+          <li>감독 페이지에서 필모그래피 확인, 없는 영화는 바로 추가</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="emoji">🔍</span>검색 패널</h3>
+        <ul>
+          <li>검색어와 6가지 정렬(오름/내림)</li>
+          <li>시청 상태, 감독, 장르, 연대, 국가 태그 필터</li>
+          <li>같은 줄은 "또는", 줄끼리는 "그리고"</li>
+          <li>앱을 껐다 켜도 필터 상태 유지</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="code">
+  <div class="wrap">
+    <div class="eyebrow">Code</div>
+    <h2>코드 구성</h2>
+    <p class="lead">Android 기본 API만으로 만들었습니다. 저장소에는 일부 코드만 공개되어 있습니다.</p>
+    <div class="code-list">
+      <div class="code-item"><code>Store</code><p>데이터 모델과 저장, 백업 / 복원</p></div>
+      <div class="code-item"><code>ClipFilter</code><p>검색·정렬·태그 필터 로직</p></div>
+      <div class="code-item"><code>FilterPanel</code><p>오른쪽 검색 패널 UI</p></div>
+      <div class="code-item"><code>FlowLayout</code><p>태그 줄바꿈 레이아웃</p></div>
+      <div class="code-item"><code>StarRatingView</code><p>0.1 단위 별점 커스텀 뷰</p></div>
+      <div class="code-item"><code>Tmdb</code><p>영화 검색, 감독 판별, 필모그래피</p></div>
+      <div class="code-item"><code>MovieUi</code><p>입력 창, 후보 선택, 정보 보기</p></div>
+      <div class="code-item"><code>DirectorActivity</code><p>감독 페이지</p></div>
+      <div class="code-item"><code>Images</code><p>메모리 기준 캐시 이미지 로더</p></div>
+    </div>
+    <p class="note">특정 웹사이트와 연동되는 부분은 공개본에서 제외했습니다.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>© doah7 · 개인 프로젝트 · 코드의 사용·복제·수정·배포를 허용하지 않습니다 (All rights reserved).</p>
+    <p>포스터와 인물 사진은 TMDB에서 제공받은 이미지이며, 각 저작권자에게 권리가 있습니다.</p>
+    <p>This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
+  </div>
+</footer>
+
+<div class="lightbox" id="lightbox"><img alt=""></div>
+<script>
+  // 스크린샷 크게 보기
+  const box = document.getElementById("lightbox");
+  const big = box.querySelector("img");
+  document.querySelectorAll(".shot img").forEach(img => {
+    img.addEventListener("click", () => {
+      big.src = img.src;
+      big.alt = img.alt;
+      box.classList.add("open");
+    });
+  });
+  box.addEventListener("click", () => box.classList.remove("open"));
+  document.addEventListener("keydown", e => { if (e.key === "Escape") box.classList.remove("open"); });
+</script>
+</body>
+</html>

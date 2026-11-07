@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#25272C"/>
+      <stop offset="1" stop-color="#141518"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FF4D5E"/>
+      <stop offset="1" stop-color="#2FE08A"/>
+    </linearGradient>
+    <linearGradient id="line" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#FF4D5E"/>
+      <stop offset="1" stop-color="#2FE08A" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="glowR" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FF4D5E" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#FF4D5E" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowG" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#2FE08A" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#2FE08A" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1280" height="320" rx="24" fill="url(#bg)"/>
+  <circle cx="190" cy="80" r="220" fill="url(#glowR)"/>
+  <circle cx="1150" cy="300" r="260" fill="url(#glowG)"/>
+
+  <!-- 필름 구멍 장식 -->
+  <g fill="#ffffff" fill-opacity="0.05">
+    <rect x="40" y="22" width="22" height="14" rx="3"/><rect x="80" y="22" width="22" height="14" rx="3"/>
+    <rect x="120" y="22" width="22" height="14" rx="3"/><rect x="160" y="22" width="22" height="14" rx="3"/>
+    <rect x="1098" y="284" width="22" height="14" rx="3"/><rect x="1138" y="284" width="22" height="14" rx="3"/>
+    <rect x="1178" y="284" width="22" height="14" rx="3"/><rect x="1218" y="284" width="22" height="14" rx="3"/>
+  </g>
+
+  <!-- 앱 아이콘 -->
+  <g transform="translate(120 80)">
+    <rect width="160" height="160" rx="38" fill="#2C2F35" stroke="#ffffff" stroke-opacity="0.08" stroke-width="2"/>
+    <path d="M65 52 L65 108 L113 80 Z" fill="url(#accent)" stroke="url(#accent)" stroke-width="14" stroke-linejoin="round"/>
+  </g>
+
+  <text x="330" y="150" font-family="'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif" font-size="76" font-weight="700" fill="#FFFFFF" letter-spacing="-1">ClipViewer</text>
+  <rect x="334" y="172" width="300" height="4" rx="2" fill="url(#line)"/>
+  <text x="332" y="222" font-family="'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif" font-size="28" fill="#C9CCD3">태블릿용 개인 영화 감상 앱</text>
+  <text x="332" y="262" font-family="'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif" font-size="20" fill="#7D828C">전체화면 감상 · 영화 정보 · 별점 · 감독별 필모그래피</text>
+</svg>
