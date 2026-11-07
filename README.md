@@ -26,6 +26,11 @@
   <sub><b>포스터 보기</b> — 시청 상태 라벨, 별점, 감독 · 연도</sub>
 </p>
 
+<p align="center">
+  <img src="screenshots/info.jpg" alt="영화 정보 창" width="100%"><br>
+  <sub><b>영화 정보</b> — 원제, 장르 · 상영시간 · 국가, 감독, 출연, TMDB 평점, 줄거리</sub>
+</p>
+
 <table>
   <tr>
     <td width="50%"><img src="screenshots/list1.jpg" alt="검색 패널 — 감독 필터"><br><sub><b>검색 패널</b> — 감독 필터 + 연도순 정렬</sub></td>
