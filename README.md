@@ -9,9 +9,22 @@
 
 ## 화면
 
-| 포스터 보기 | 목록 보기 + 검색 패널 | 감독 페이지 | 재생 화면 |
-|---|---|---|---|
-| ![](screenshots/grid.png) | ![](screenshots/list.png) | ![](screenshots/director.png) | ![](screenshots/player.png) |
+**포스터 보기**
+![포스터 보기](screenshots/grid.jpg)
+
+**검색 패널 — 감독 필터 + 연도순 정렬**
+![검색 패널](screenshots/list1.jpg)
+
+**검색 패널 — 시청 상태 필터**
+![시청 상태 필터](screenshots/list2.jpg)
+
+**감독 탭**
+![감독 탭](screenshots/director1.jpg)
+
+**감독 페이지 — 필모그래피와 내 클립**
+![감독 페이지](screenshots/director2.jpg)
+
+*포스터와 인물 사진은 TMDB에서 제공받은 이미지이며, 각 저작권자에게 권리가 있습니다.*
 
 ## 주요 기능
 
